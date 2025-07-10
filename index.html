@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <style>
+        @font-face {
+            font-family: 'YEEZY TSTAR BOLD';
+            src: url('font.ttf') format('TrueType');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'YEEZY TSTAR BOLD', 'Arial Black', sans-serif;
+        }
+
+        #countdown-container {
+            text-align: center;
+        }
+
+        #title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        #timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .time-box {
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 100px;
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 5rem;
+            font-weight: bold;
+            color: #000000;
+            line-height: 1;
+        }
+
+        .time-box .label {
+            font-size: 1rem;
+            margin-top: 10px;
+            color: #555;
+            text-transform: uppercase;
+        }
+
+        #expired-message {
+            font-size: 4rem;
+            color: #d9534f;
+        }
+        
+        @media (max-width: 600px) {
+            #timer {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .time-box span {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="countdown-container">
+        <h1 id="title">COUNTDOWN</h1>
+        <div id="timer">
+            <div class="time-box">
+                <span id="days">00</span>
+                <div class="label">Giorni</div>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <div class="label">Ore</div>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <div class="label">Minuti</div>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <div class="label">Secondi</div>
+            </div>
+        </div>
+        <div id="expired-message" style="display:none;">TEMPO SCADUTO!</div>
+    </div>
+
+    <audio id="background-song" src="wake.wav" autoplay loop>
+        Il tuo browser non supporta l'elemento audio.
+    </audio>
+
+    <script>
+        const countDownDate = new Date("2025-08-18T18:00:00+02:00").getTime();
+
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const timerEl = document.getElementById('timer');
+        const expiredMessageEl = document.getElementById('expired-message');
+        const titleEl = document.getElementById('title');
+
+        const countdownInterval = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const formatTime = (time) => time < 10 ? `0${time}` : time;
+
+            daysEl.innerHTML = formatTime(days);
+            hoursEl.innerHTML = formatTime(hours);
+            minutesEl.innerHTML = formatTime(minutes);
+            secondsEl.innerHTML = formatTime(seconds);
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                timerEl.style.display = 'none';
+                titleEl.style.display = 'none';
+                expiredMessageEl.style.display = 'block';
+                
+                const audio = document.getElementById('background-song');
+                if(audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>
